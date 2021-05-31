@@ -167,17 +167,13 @@ int main(int argc, char *argv[]) {
     /* START: Do NOT optimize/parallelize the code of the main program above this point */
 
     /* 3. Allocate memory for the layer and initialize to zero */
-    float *layer = (float *)malloc( sizeof(float) * layer_size );
-    float *layer_copy = (float *)malloc( sizeof(float) * layer_size );
+    
+    float *layer = (float *)calloc( layer_size,  sizeof(float));
+    float *layer_copy = (float *)calloc(  layer_size , sizeof(float));
     if ( layer == NULL || layer_copy == NULL ) {
         fprintf(stderr,"Error: Allocating the layer memory\n");
         exit( EXIT_FAILURE );
     }
-    
-    #pragma parallel for
-    for( k=0; k<layer_size; k++ ) layer[k] = 0.0f;
-    #pragma parallel for
-    for( k=0; k<layer_size; k++ ) layer_copy[k] = 0.0f;
     
     /* 4. Storms simulation */
     #pragma parallel for
@@ -197,15 +193,13 @@ int main(int argc, char *argv[]) {
             for( k=0; k<layer_size; k++ ) {
                 /* Update the energy value for the cell */
                 update( layer, layer_size, k, position, energy );
+                //4.2.1
+                if(j == storms[i].size - 1)
+                	layer_copy[k] = layer[k];
             }
         }
-
-        /* 4.2. Energy relaxation between storms */
-        /* 4.2.1. Copy values to the ancillary array */
-        #pragma parallel for
-        for( k=0; k<layer_size; k++ ) 
-            layer_copy[k] = layer[k];
-
+	
+	// dois fors iguais como melhorar
         /* 4.2.2. Update layer using the ancillary values.
                   Skip updating the first and last positions */
         #pragma parallel for
@@ -214,7 +208,8 @@ int main(int argc, char *argv[]) {
 	
         /* 4.3. Locate the maximum value in the layer, and its position */
         #pragma parallel for
-        for( k=1; k<layer_size-1; k++ ) {
+        for( k=1; k<layer_size-1; k++ ) {           
+             
             /* Check it only if it is a local maximum */
             if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
                 if ( layer[k] > maximum[i] ) {
