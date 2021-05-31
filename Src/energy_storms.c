@@ -94,6 +94,7 @@ void debug_print(int layer_size, float *layer, int *positions, float *maximum, i
     }
 }
 
+
 /*
  * Function: Read data of particle storms from a file
  */
