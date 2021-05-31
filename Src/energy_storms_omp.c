@@ -18,7 +18,7 @@
 #include<stdlib.h>
 #include<math.h>
 #include<sys/time.h>
-#include<omp-tools.h>
+#include<omp.h>
 
 /* Function to get wall time */
 double cp_Wtime(){
@@ -180,8 +180,10 @@ int main(int argc, char *argv[]) {
     for( k=0; k<layer_size; k++ ) layer_copy[k] = 0.0f;
     
     /* 4. Storms simulation */
+    #pragma parallel for
     for( i=0; i<num_storms; i++) {
 
+        
         /* 4.1. Add impacts energies to layer cells */
         /* For each particle */
         for( j=0; j<storms[i].size; j++ ) {
