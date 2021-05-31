@@ -35,6 +35,7 @@ typedef struct {
     int *posval; // Positions and values
 } Storm;
 
+/*TBD*/
 /* THIS FUNCTION CAN BE MODIFIED */
 /* Function to update a single position of the layer */
 void update( float *layer, int layer_size, int k, int pos, float energy ) {
@@ -173,12 +174,16 @@ int main(int argc, char *argv[]) {
         fprintf(stderr,"Error: Allocating the layer memory\n");
         exit( EXIT_FAILURE );
     }
+    #pragma parallel for
     for( k=0; k<layer_size; k++ ) layer[k] = 0.0f;
+
+    #pragma parallel for
     for( k=0; k<layer_size; k++ ) layer_copy[k] = 0.0f;
     
     /* 4. Storms simulation */
     for( i=0; i<num_storms; i++) {
 
+        /*Antonio*/
         /* 4.1. Add impacts energies to layer cells */
         /* For each particle */
         for( j=0; j<storms[i].size; j++ ) {
@@ -194,16 +199,19 @@ int main(int argc, char *argv[]) {
             }
         }
 
+        /*Pedro*/
         /* 4.2. Energy relaxation between storms */
         /* 4.2.1. Copy values to the ancillary array */
         for( k=0; k<layer_size; k++ ) 
             layer_copy[k] = layer[k];
 
+        /*Pedro*/
         /* 4.2.2. Update layer using the ancillary values.
                   Skip updating the first and last positions */
         for( k=1; k<layer_size-1; k++ )
             layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
 
+        /*Diogo*/
         /* 4.3. Locate the maximum value in the layer, and its position */
         for( k=1; k<layer_size-1; k++ ) {
             /* Check it only if it is a local maximum */
