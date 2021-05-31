@@ -185,6 +185,7 @@ int main(int argc, char *argv[]) {
 
         /* 4.1. Add impacts energies to layer cells */
         /* For each particle */
+        #pragma parallel for
         for( j=0; j<storms[i].size; j++ ) {
             /* Get impact energy (expressed in thousandths) */
             float energy = (float)storms[i].posval[j*2+1] * 1000;
@@ -192,6 +193,7 @@ int main(int argc, char *argv[]) {
             int position = storms[i].posval[j*2];
 
             /* For each cell in the layer */
+            #pragma parallel for
             for( k=0; k<layer_size; k++ ) {
                 /* Update the energy value for the cell */
                 update( layer, layer_size, k, position, energy );
@@ -246,6 +248,10 @@ int main(int argc, char *argv[]) {
     /* 8. Free resources */    
     for( i=0; i<argc-2; i++ )
         free( storms[i].posval );
+    
+    // Free allocated float arrays
+    free(layer);
+    free(layer_copy);
 
     /* 9. Program ended successfully */
     return 0;
