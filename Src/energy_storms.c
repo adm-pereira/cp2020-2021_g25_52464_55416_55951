@@ -174,10 +174,8 @@ int main(int argc, char *argv[]) {
         fprintf(stderr,"Error: Allocating the layer memory\n");
         exit( EXIT_FAILURE );
     }
-    #pragma parallel for
-    for( k=0; k<layer_size; k++ ) layer[k] = 0.0f;
 
-    #pragma parallel for
+    for( k=0; k<layer_size; k++ ) layer[k] = 0.0f;
     for( k=0; k<layer_size; k++ ) layer_copy[k] = 0.0f;
     
     /* 4. Storms simulation */
