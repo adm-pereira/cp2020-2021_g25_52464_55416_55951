@@ -168,11 +168,17 @@ int main(int argc, char *argv[]) {
 
     /* 3. Allocate memory for the layer and initialize to zero */
     
-    float *layer = (float *)calloc( layer_size,  sizeof(float));
-    float *layer_copy = (float *)calloc(  layer_size , sizeof(float));
+    float *layer = (float *)malloc( layer_size * sizeof(float));
+    float *layer_copy = (float *)malloc(  layer_size * sizeof(float));
     if ( layer == NULL || layer_copy == NULL ) {
         fprintf(stderr,"Error: Allocating the layer memory\n");
         exit( EXIT_FAILURE );
+    }
+    
+    #pragma parallel for
+    for( k=0; k<layer_size; k++ ){
+    	layer[k] = 0.0f;
+    	layer_copy[k] = 0.0f;
     }
     
     /* 4. Storms simulation */
