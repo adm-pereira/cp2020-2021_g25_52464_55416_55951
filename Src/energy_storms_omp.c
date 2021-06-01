@@ -214,6 +214,7 @@ int main(int argc, char *argv[]) {
 		#pragma omp for
 		for( k=1; k<layer_size-1; k++ )
 		    layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
+
 		
 		/* 4.3. Locate the maximum value in the layer, and its position */
 		#pragma omp for
@@ -222,8 +223,11 @@ int main(int argc, char *argv[]) {
 		    /* Check it only if it is a local maximum */
 		    if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
 		        if ( layer[k] > maximum[i] ) {
-		            maximum[i] = layer[k];
-		            positions[i] = k;
+                    // Added a critical zone
+                      #pragma omp critical {
+		              maximum[i] = layer[k];
+		              positions[i] = k;
+                    }
 		        }
 		    }
 		}
