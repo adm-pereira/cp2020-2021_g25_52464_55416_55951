@@ -24,51 +24,70 @@ def compare(seqoutput, ompoutput):
         #print('outputs are equal')
         #print(f'Omp: {omp_time}')
         #print(f'Seq: {seq_time}')
-        #ratio = float(omp_time)/float(seq_time) * 100
+        ratio = float(omp_time)/float(seq_time) * 100.0
         #print(f'Parallel version time is %.2f of sequential version time' % ratio)
+        return ratio
     else:
         print('Outputs differ!')
         print(f'Sequential ---> {seq_results}')
         print(f'Parallel   ---> {omp_results}')
+        return -1
 
 
 sum_seq = 0.0
 sum_omp = 0.0
 
 #all tests
-test_35 = 'test_files/test_01_a35_p8_w1 test_files/test_01_a35_p7_w2 test_files/test_01_a35_p5_w3 test_files/test_01_a35_p8_w4'
-test_30k = 'test_files/test_02_a30k_p20k_w1 test_files/test_02_a30k_p20k_w2 test_files/test_02_a30k_p20k_w3'
-#' test_files/test_02_a30k_p20k_w4 test_files/test_02_a30k_p20k_w5 test_files/test_02_a30k_p20k_w6' 
+test_1 = 'test_files/test_01_a35_p5_w3 test_files/test_01_a35_p7_w2 test_files/test_01_a35_p8_w1 test_files/test_01_a35_p8_w4'
+array_1 = 35
+test_2 = 'test_files/test_02_a30k_p20k_w1 test_files/test_02_a30k_p20k_w2 test_files/test_02_a30k_p20k_w3 test_files/test_02_a30k_p20k_w4 test_files/test_02_a30k_p20k_w5 test_files/test_02_a30k_p20k_w6'
+array_2 = 30000
+test_3 = 'test_files/test_03_a20_p4_w1'
+array_3 = 20
+test_4 = 'test_files/test_04_a20_p4_w1'
+array_4 = 20
+test_5 = 'test_files/test_05_a20_p4_w1'
+array_5 = 20
+test_6 = 'test_files/test_06_a20_p4_w1'
+array_6 = 20
+test_7 = 'test_files/test_07_a1M_p5k_w1 test_files/test_07_a1M_p5k_w2 test_files/test_07_a1M_p5k_w3 test_files/test_07_a1M_p5k_w4'
+array_7 = 1000000
+test_8 = 'test_files/test_08_a100M_p1_w1 test_files/test_08_a100M_p1_w2 test_files/test_08_a100M_p1_w3'
+array_8 = 100000000
+test_9 = 'test_files/test_09_a16-17_p3_w1'
+array_9 = 16
 
 if __name__ == '__main__':
 
-    number_tests = int(sys.argv[1])
-    array_size = int(sys.argv[2])
+    nTests = int(sys.argv[1])
+    test_number = int(sys.argv[2])
 
-    print(f'Using array size {array_size}\nRuns {number_tests} tests')
+    print(f'Running tests: 1-{test_number}, {nTests} time(s)')
     
-    for t in range(0, number_tests):
-        if array_size == 35:
-            str = f'./energy_storms_seq {array_size} ' + test_35
-        else:
-            str = f'./energy_storms_seq {array_size} ' + test_30k
+    total_average = 0.0
+    for t in range(0, nTests):
+
+        iteration_average = 0.0
+
+        for n in range(1, (test_number + 1)):
+            test_input = ""
+            array_input = 0
+            exec('test_input = test_%d' % n)
+            exec('array_input = array_%d' % n)
+
+            str = f'./energy_storms_seq {array_input} ' + test_input
+            run_command('make energy_storms_seq')
+            seqoutput = subprocess.check_output(str, shell=True).decode()
+
+            str = f'./energy_storms_omp {array_input} ' + test_input
+            run_command('make energy_storms_omp')
+            ompoutput = subprocess.check_output(str, shell=True).decode()
+
+            iteration_average += compare(seqoutput, ompoutput)
+
+        total_average += iteration_average / test_number
         
-        run_command('make energy_storms_seq')
-        seqoutput = subprocess.check_output(str, shell=True).decode()
-    
-        if array_size == 35:
-            str = f'./energy_storms_omp {array_size} ' + test_35
-        else:
-            str = f'./energy_storms_omp {array_size} ' + test_30k
-
-        run_command('make energy_storms_omp')
-        ompoutput = subprocess.check_output(str, shell=True).decode()
-    
-        compare(seqoutput, ompoutput)
-
-    ratio = ((sum_seq/number_tests)/(sum_omp/number_tests)) * 100
-
-    print(f'Average ratio SequentialTime/ParallelTime: %0.2f' % ratio)
-
+    ratio = total_average / nTests
+    print('Average ratio SequentialTime/ParallelTime: %0.2f percent' % ratio)
     
 
