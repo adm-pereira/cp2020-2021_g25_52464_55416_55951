@@ -174,15 +174,16 @@ int main(int argc, char *argv[]) {
         fprintf(stderr,"Error: Allocating the layer memory\n");
         exit( EXIT_FAILURE );
     }
+
+    #pragma omp parallel for
+    for( k=0; k<layer_size; k++ ){
+        layer[k] = 0.0f;
+        layer_copy[k] = 0.0f;
+    }
     
     #pragma omp parallel 
     {
-    	#pragma omp for
-	    for( k=0; k<layer_size; k++ ){
-	    	layer[k] = 0.0f;
-	    	layer_copy[k] = 0.0f;
-	    }
-	    
+    	    
 	    /* 4. Storms simulation */
 	    #pragma omp for
 	    for( i=0; i<num_storms; i++) {
