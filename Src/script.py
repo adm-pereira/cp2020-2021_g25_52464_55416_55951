@@ -24,7 +24,7 @@ def compare(seqoutput, ompoutput):
         #print('outputs are equal')
         #print(f'Omp: {omp_time}')
         #print(f'Seq: {seq_time}')
-        ratio = float(omp_time)/float(seq_time) * 100.0
+        ratio = (float(seq_time)/float(omp_time) * 100.0) - 100
         #print(f'Parallel version time is %.2f of sequential version time' % ratio)
         return ratio
     else:
@@ -88,6 +88,6 @@ if __name__ == '__main__':
         total_average += iteration_average / test_number
         
     ratio = total_average / nTests
-    print('Average ratio SequentialTime/ParallelTime: %0.2f percent' % ratio)
+    print('Average ratio ParallelTime is %0.2f percent faster than SequentialTime' % ratio)
     
 

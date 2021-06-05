@@ -175,66 +175,62 @@ int main(int argc, char *argv[]) {
         exit( EXIT_FAILURE );
     }
 
-    #pragma omp parallel for
-    for( k=0; k<layer_size; k++ ){
+    #pragma parallel for
+    for( k=0; k < layer_size; k++ ){
         layer[k] = 0.0f;
         layer_copy[k] = 0.0f;
     }
     
-    	    
-	/* 4. Storms simulation */
+    
+    /* 4. Storms simulation */
     for( i=0; i<num_storms; i++) {
+        /* 4.1. Add impacts energies to layer cells */
+        /* For each particle */
+        float energy;
+        int position;
+        
+        for( j=0; j<storms[i].size; j++ ) {
 
-		/* 4.1. Add impacts energies to layer cells */
-		/* For each particle */
-		#pragma omp for collapse(2)
-		for( j=0; j<storms[i].size; j++ ) {
-		    /* For each cell in the layer */
-		    for( k=0; k<layer_size; k++ ) {
-                	/* Get impact energy (expressed in thousandths) */
-		    	float energy = (float)storms[i].posval[j*2+1] * 1000;
-		    	/* Get impact position */
-		    	int position = storms[i].posval[j*2];
-
-		        /* Update the energy value for the cell */
-		        update( layer, layer_size, k, position, energy );
-		        //4.2.1
-		        if(j == storms[i].size - 1)
-		        	layer_copy[k] = layer[k];
-		    }
-		}
-		
-		// dois fors iguais como melhorar
-		/* 4.2.2. Update layer using the ancillary values.
-		          Skip updating the first and last positions */
-		#pragma omp for
-		for( k=1; k<layer_size-1; k++ ) 
-		    layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
-
-		
-		/* 4.3. Locate the maximum value in the layer, and its position */
-
-        float max = 0.0f;
-        int maxIndex = 0;
-
-        #pragma omp for
-        for( k=1; k<layer_size-1; k++ ) {
-            /* Check it only if it is a local maximum */
-            if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
-                if (layer[k] > max) {
-                    max = layer[k];
-                    maxIndex = k;
-                }
+            /* Get impact energy (expressed in thousandths) */
+                energy = (float)storms[i].posval[j*2+1] * 1000;
+                /* Get impact position */
+                position = storms[i].posval[j*2];
+            /* For each cell in the layer */
+            #pragma omp parallel for
+            for( k=0; k<layer_size; k++ ) {
+                /* Update the energy value for the cell */
+                update( layer, layer_size, k, position, energy ); 
+                if(j == storms[i].size - 1)
+                    layer_copy[k] = layer[k];
             }
         }
 
-        // Added critical zone 
-        #pragma omp critical
-        {
-            maximum[i] = max;
-            positions[i] = maxIndex;
+        // dois fors iguais como melhorar
+        /* 4.2.2. Update layer using the ancillary values.
+                Skip updating the first and last positions */
+
+        #pragma parallel for
+        for( k=1; k<layer_size-1; k++ ) 
+            layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
+
+        
+        /* 4.3. Locate the maximum value in the layer, and its position */
+        
+        #pragma omp parallel for
+        for( k=1; k<layer_size-1; k++ ) {
+            /* Check it only if it is a local maximum */
+            if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
+                #pragma omp critical
+                {
+                    if (layer[k] > maximum[i]) {
+                        maximum[i] = layer[k];
+                        positions[i] = k;
+                    }
+                }
+            }
         }
-    }    
+        
+    }   
 
 
     /* END: Do NOT optimize/parallelize the code below this point */
