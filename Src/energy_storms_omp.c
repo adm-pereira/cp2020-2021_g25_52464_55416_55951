@@ -190,15 +190,13 @@ int main(int argc, char *argv[]) {
 		/* For each particle */
 		#pragma omp for collapse(2)
 		for( j=0; j<storms[i].size; j++ ) {
-
-		    /* Get impact energy (expressed in thousandths) */
-		    float energy = (float)storms[i].posval[j*2+1] * 1000;
-		    /* Get impact position */
-		    int position = storms[i].posval[j*2];
-
 		    /* For each cell in the layer */
 		    for( k=0; k<layer_size; k++ ) {
-                
+                	/* Get impact energy (expressed in thousandths) */
+		    	float energy = (float)storms[i].posval[j*2+1] * 1000;
+		    	/* Get impact position */
+		    	int position = storms[i].posval[j*2];
+
 		        /* Update the energy value for the cell */
 		        update( layer, layer_size, k, position, energy );
 		        //4.2.1
