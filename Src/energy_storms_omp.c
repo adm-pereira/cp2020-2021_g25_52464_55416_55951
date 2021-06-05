@@ -181,83 +181,64 @@ int main(int argc, char *argv[]) {
         layer_copy[k] = 0.0f;
     }
     
-    #pragma omp parallel 
-    {
     	    
-	    /* 4. Storms simulation */
-	    #pragma omp for
-	    for( i=0; i<num_storms; i++) {
+	/* 4. Storms simulation */
+    #pragma omp parallel for
+    for( i=0; i<num_storms; i++) {
+
+		/* 4.1. Add impacts energies to layer cells */
+		/* For each particle */
+		#pragma omp for collapse(2)
+		for( j=0; j<storms[i].size; j++ ) {
+
+		    /* Get impact energy (expressed in thousandths) */
+		    float energy = (float)storms[i].posval[j*2+1] * 1000;
+		    /* Get impact position */
+		    int position = storms[i].posval[j*2];
+
+		    /* For each cell in the layer */
+		    for( k=0; k<layer_size; k++ ) {
+                
+		        /* Update the energy value for the cell */
+		        update( layer, layer_size, k, position, energy );
+		        //4.2.1
+		        if(j == storms[i].size - 1)
+		        	layer_copy[k] = layer[k];
+		    }
+		}
+		
+		// dois fors iguais como melhorar
+		/* 4.2.2. Update layer using the ancillary values.
+		          Skip updating the first and last positions */
+		#pragma omp for
+		for( k=1; k<layer_size-1; k++ ) 
+		    layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
 
 		
-    		/* 4.1. Add impacts energies to layer cells */
-    		/* For each particle */
-    		#pragma omp for
-    		for( j=0; j<storms[i].size; j++ ) {
-    		    /* Get impact energy (expressed in thousandths) */
-    		    float energy = (float)storms[i].posval[j*2+1] * 1000;
-    		    /* Get impact position */
-    		    int position = storms[i].posval[j*2];
+		/* 4.3. Locate the maximum value in the layer, and its position */
 
-    		    /* For each cell in the layer */
-    		    #pragma omp for
-    		    for( k=0; k<layer_size; k++ ) {
-    		        /* Update the energy value for the cell */
-    		        update( layer, layer_size, k, position, energy );
-    		        //4.2.1
-    		        if(j == storms[i].size - 1)
-    		        	layer_copy[k] = layer[k];
-    		    }
-    		}
-    		
-    		// dois fors iguais como melhorar
-    		/* 4.2.2. Update layer using the ancillary values.
-    		          Skip updating the first and last positions */
-    		#pragma omp for
-    		for( k=1; k<layer_size-1; k++ ) 
-    		    layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
+        float max = 0.0f;
+        int maxIndex = 0;
 
-    		
-    		/* 4.3. Locate the maximum value in the layer, and its position */
-
-            float max = 0.0f;
-            int maxIndex = 0;
-
-            #pragma omp for
-            for( k=1; k<layer_size-1; k++ ) {
-                /* Check it only if it is a local maximum */
-                if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
-                    if (layer[k] > max) {
-                        max = layer[k];
-                        maxIndex = k;
-                    }
+        #pragma omp for
+        for( k=1; k<layer_size-1; k++ ) {
+            /* Check it only if it is a local maximum */
+            if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
+                if (layer[k] > max) {
+                    max = layer[k];
+                    maxIndex = k;
                 }
             }
+        }
 
-            
-            // Added critical zone 
-            #pragma omp critical
-            {
-                maximum[i] = max;
-                positions[i] = maxIndex;
-            }
-            
-    		/*#pragma omp for
-    		for( k=1; k<layer_size-1; k++ ) {   
-    		    // Check it only if it is a local maximum 
-    		    if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
-                    if (layer[k] > maximum[i])
-                        // Added a critical zone
-                        #pragma omp critical 
-                        {
-                        // Output dependencies
-    		              maximum[i] = layer[k];
-    		              positions[i] = k;
-                        }
-    		        }
-    		    }
-    		}*/
-        }    
-    }
+        // Added critical zone 
+        #pragma omp critical
+        {
+            maximum[i] = max;
+            positions[i] = maxIndex;
+        }
+    }    
+
 
     /* END: Do NOT optimize/parallelize the code below this point */
 
