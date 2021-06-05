@@ -183,7 +183,6 @@ int main(int argc, char *argv[]) {
     
     	    
 	/* 4. Storms simulation */
-    #pragma omp parallel for num_threads(num_storms)
     for( i=0; i<num_storms; i++) {
 
 		/* 4.1. Add impacts energies to layer cells */
