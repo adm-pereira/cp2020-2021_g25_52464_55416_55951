@@ -191,7 +191,7 @@ int main(int argc, char *argv[]) {
 		
     		/* 4.1. Add impacts energies to layer cells */
     		/* For each particle */
-    		//#pragma omp for
+    		#pragma omp for
     		for( j=0; j<storms[i].size; j++ ) {
     		    /* Get impact energy (expressed in thousandths) */
     		    float energy = (float)storms[i].posval[j*2+1] * 1000;
@@ -199,7 +199,7 @@ int main(int argc, char *argv[]) {
     		    int position = storms[i].posval[j*2];
 
     		    /* For each cell in the layer */
-    		    //#pragma omp for
+    		    #pragma omp for
     		    for( k=0; k<layer_size; k++ ) {
     		        /* Update the energy value for the cell */
     		        update( layer, layer_size, k, position, energy );
@@ -212,7 +212,7 @@ int main(int argc, char *argv[]) {
     		// dois fors iguais como melhorar
     		/* 4.2.2. Update layer using the ancillary values.
     		          Skip updating the first and last positions */
-    		//#pragma omp for
+    		#pragma omp for
     		for( k=1; k<layer_size-1; k++ ) 
     		    layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
 
@@ -222,7 +222,7 @@ int main(int argc, char *argv[]) {
             float max = 0.0f;
             int maxIndex = 0;
 
-            //#pragma omp for
+            #pragma omp for
             for( k=1; k<layer_size-1; k++ ) {
                 /* Check it only if it is a local maximum */
                 if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
