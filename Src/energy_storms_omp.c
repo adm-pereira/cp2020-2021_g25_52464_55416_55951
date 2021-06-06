@@ -148,13 +148,14 @@ int main(int argc, char *argv[]) {
         exit( EXIT_FAILURE );
     }
 
-    int layer_size = atoi( argv[1] );
-    int num_storms = argc-2;
+    int layer_size = atoi( argv[2] );
+    int thrs = atoi(argv[1]);
+    int num_storms = argc-3;
     Storm storms[ num_storms ];
 
     /* 1.2. Read storms information */
-    for( i=2; i<argc; i++ ) 
-        storms[i-2] = read_storm_file( argv[i] );
+    for( i=3; i<argc; i++ ) 
+        storms[i-3] = read_storm_file( argv[i] );
 
     /* 1.3. Intialize maximum levels to zero */
     float maximum[ num_storms ];
@@ -178,61 +179,61 @@ int main(int argc, char *argv[]) {
         exit( EXIT_FAILURE );
     }
 
-    #pragma parallel for
-    for( k=0; k < layer_size; k++ ){
-        layer[k] = 0.0f;
-        layer_copy[k] = 0.0f;
-    }
     
-    
-    /* 4. Storms simulation */
-    for( i=0; i<num_storms; i++) {
-        /* 4.1. Add impacts energies to layer cells */
-        /* For each particle */
-        float energy;
-        int position;
-    
-        for( j=0; j<storms[i].size; j++ ) {
-
-             /* Get impact energy (expressed in thousandths) */
-                energy = (float)storms[i].posval[j*2+1] * 1000;
-                /* Get impact position */
-                position = storms[i].posval[j*2];
-
-            #pragma omp parallel for 
-            for( k=0; k<layer_size; k++ ) {
-                /* Update the energy value for the cell */
-                update( layer, layer_size, k, position, energy);
-                if(j == storms[i].size -1)
-                    layer_copy[k] = layer[k];
-            }
+        #pragma omp parallel for num_threads(thrs)
+        for( k=0; k < layer_size; k++ ){
+            layer[k] = 0.0f;
+            layer_copy[k] = 0.0f;
         }
+        /* 4. Storms simulation */
+        for( i=0; i<num_storms; i++) {
+            /* 4.1. Add impacts energies to layer cells */
+            /* For each particle */
+            float energy;
+            int position;
 
-        /* 4.2.2. Update layer using the ancillary values.
-                Skip updating the first and last positions */
+            for( j=0; j<storms[i].size; j++ ) {
 
-        #pragma omp parallel for
-        for( k=1; k<layer_size-1; k++ ) 
-            layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
+                    /* Get impact energy (expressed in thousandths) */
+                    energy = (float)storms[i].posval[j*2+1] * 1000;
+                    /* Get impact position */
+                    position = storms[i].posval[j*2];
 
-        
-        /* 4.3. Locate the maximum value in the layer, and its position */
-        
-        #pragma omp parallel for
-        for( k=1; k<layer_size-1; k++ ) {
-            /* Check it only if it is a local maximum */
-            if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
-                #pragma omp critical
-                {
-                    if (layer[k] > maximum[i]) {
-                        maximum[i] = layer[k];
-                        positions[i] = k;
+                #pragma omp parallel for num_threads(thrs)
+                for( k=0; k<layer_size; k++ ) {
+                    /* Update the energy value for the cell */
+                    update( layer, layer_size, k, position, energy);
+                    if(j == storms[i].size -1)
+                        layer_copy[k] = layer[k];
+                }
+            }
+
+            /* 4.2.2. Update layer using the ancillary values.
+                    Skip updating the first and last positions */
+
+            #pragma omp parallel for num_threads(thrs)
+            for( k=1; k<layer_size-1; k++ ) 
+                layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
+
+            
+            /* 4.3. Locate the maximum value in the layer, and its position */
+            
+            #pragma omp parallel for num_threads(thrs)
+            for( k=1; k<layer_size-1; k++ ) {
+                /* Check it only if it is a local maximum */
+                if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
+                    #pragma omp critical
+                    {
+                        if (layer[k] > maximum[i]) {
+                            maximum[i] = layer[k];
+                            positions[i] = k;
+                        }
                     }
                 }
             }
+            
         }
-        
-    }   
+      
 
 
     /* END: Do NOT optimize/parallelize the code below this point */
@@ -256,7 +257,7 @@ int main(int argc, char *argv[]) {
     printf("\n");
 
     /* 8. Free resources */    
-    for( i=0; i<argc-2; i++ )
+    for( i=0; i<argc-3; i++ )
         free( storms[i].posval );
     
     // Free allocated float arrays
