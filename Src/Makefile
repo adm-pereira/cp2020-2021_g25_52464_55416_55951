@@ -66,3 +66,7 @@ debug_seq:
 
 debug_omp:
 	make energy_storms_omp DEBUG=-DDEBUG
+
+debug_all:
+	make debug_seq
+	make debug_omp
