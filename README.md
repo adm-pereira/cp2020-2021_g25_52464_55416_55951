@@ -11,19 +11,22 @@ This is a version of the assignment customized by [João Lourenço](https://doce
 to be used in the course  of Concurrency and Parallelism at [FCT-NOVA](www.di.fct.unl.pt), 
 edition 2020-21.
 
+After João Lourenço customizations, the project was changed by Pedro Madeira, António Pereira and Diogo Lages.
+
 --------------------------------------------------------------
 
-Read the handout and use the sequential code as reference to study.
-Use the other source files to parallelize with the proper programming model.
+# How to run the program
 
-Edit the first lines in the Makefile to set your preferred compilers and flags
-for both the sequential code and for each parallel programming model: 
-OpenMP, MPI, and CUDA.
+1. Open the Src directory in a linux terminal
+2. `make all` or `make debug_all` if you want normal run or debug run, respectively
+3. `./energy_storms_seq <array_size> <{name of all test files you want separated by an empty space}>` for sequential version
+4. `./energy_storms_seq <array_size> <{name of all test files you want separated by an empty space}>` for parallel version
 
-To see a description of the Makefile options execute:
-`$ make help`
+# How to run the program as we ourselves tested
+(You need to have python3 installed as well as numpy, progress and matplotlib libraries)
 
-Use the input files in the test_files directory for your first tests.
-Students are encouraged to manually write or automatically generate
-their own input files for more complete tests. See a description of
-the input files format in the handout.
+This will run all tests given by the teacher and check if the output is correct as well for tests 01, 02 and 09.
+
+1. `python3 scripts/run-tests.py test_files/tests.ini experiment_01 -d`. This will create .csv files in Src/logs/experiment_01
+2. If you want to generate automatic plots run `python3 scripts/gen-plot.py`. This will generate plot pictures in Src/plots/experiment_01
+3. Additionaly, you can also run experiment_02 and experiment_03 which are more specific tests we made.
