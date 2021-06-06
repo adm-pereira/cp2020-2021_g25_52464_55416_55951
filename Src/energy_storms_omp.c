@@ -41,23 +41,26 @@ typedef struct {
 void update( float *layer, int layer_size, int k, int pos, float energy ) {
     /* 1. Compute the absolute value of the distance between the
         impact position and the k-th position of the layer */
-    int distance = pos - k;
-    if ( distance < 0 ) distance = - distance;
+    float energy_k;
+    int distance;
+
+    distance = pos - k;
+
+    if ( distance < 0 ) 
+        distance = - distance;
 
     /* 2. Impact cell has a distance value of 1 */
-    distance = distance + 1;
-
     /* 3. Square root of the distance */
     /* NOTE: Real world atenuation typically depends on the square of the distance.
        We use here a tailored equation that affects a much wider range of cells */
-    float atenuacion = sqrtf( (float)distance );
-
+    
     /* 4. Compute attenuated energy */
-    float energy_k = energy / layer_size / atenuacion;
+    energy_k = energy / layer_size / sqrtf((float)distance + 1);
 
     /* 5. Do not add if its absolute value is lower than the threshold */
+    
     if ( energy_k >= THRESHOLD / layer_size || energy_k <= -THRESHOLD / layer_size )
-        layer[k] = layer[k] + energy_k;
+        layer[k] += energy_k;
 }
 
 
@@ -188,28 +191,27 @@ int main(int argc, char *argv[]) {
         /* For each particle */
         float energy;
         int position;
-        
+    
         for( j=0; j<storms[i].size; j++ ) {
 
-            /* Get impact energy (expressed in thousandths) */
+             /* Get impact energy (expressed in thousandths) */
                 energy = (float)storms[i].posval[j*2+1] * 1000;
                 /* Get impact position */
                 position = storms[i].posval[j*2];
-            /* For each cell in the layer */
-            #pragma omp parallel for
+
+            #pragma omp parallel for 
             for( k=0; k<layer_size; k++ ) {
                 /* Update the energy value for the cell */
-                update( layer, layer_size, k, position, energy ); 
-                if(j == storms[i].size - 1)
+                update( layer, layer_size, k, position, energy);
+                if(j == storms[i].size -1)
                     layer_copy[k] = layer[k];
             }
         }
 
-        // dois fors iguais como melhorar
         /* 4.2.2. Update layer using the ancillary values.
                 Skip updating the first and last positions */
 
-        #pragma parallel for
+        #pragma omp parallel for
         for( k=1; k<layer_size-1; k++ ) 
             layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
 
