@@ -55,7 +55,7 @@ array_7 = 1000000
 test_8 = 'test_files/test_08_a100M_p1_w1 test_files/test_08_a100M_p1_w2 test_files/test_08_a100M_p1_w3'
 array_8 = 100000000
 test_9 = 'test_files/test_09_a16-17_p3_w1'
-array_9 = 16
+array_9 = 17
 
 if __name__ == '__main__':
 
