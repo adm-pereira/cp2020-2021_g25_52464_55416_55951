@@ -97,7 +97,7 @@ Our goal in this project is to parallelize a sequential program using the OpenMP
 Our approach to the project in general was based on Bloom's Taxonomy Pyramid, which is a set of hierarchical models to classify and specify the knowledge levels. There are six levels in Bloom's Pyramid: remembering, understanding, applying, analyzing, evaluating, and creating, where each one depends on the one below.\\
 
 \begin{center}
-    \begin{figure}[h!]
+    \begin{figure}[htbp]
         \centering{\includegraphics[width=4cm]{Bloom's Pyramid.png}}
         \caption{Knowledge Levels of Bloom's Pyramid}
         \centering{\label{fig}}
@@ -137,18 +137,17 @@ Fazer secções para cada ponto do projeto? 4.x até 4.y?
     \item Tentámos isto - das 3 foi a melhor - pôr gráfico de resultados comparando com as outas tentativas
 \end{itemize}
 
-\section{Evaluation/tests and corrections}
-We tested ...
+\section{Testing and correcting}
+Regarding the testing phase, we started testing our code as soon as we knew it would run correctly. As told in the introduction, analysis and evaluation were done simultaneously, so we wanted to test extensively our code. Unfortunately, this didn't go according to our expectations because of the time limit, however we managed to test our code enough so we could get good results and take good conclusions out of them.
+\\
+For testing purposes we started by making a python script that would run both sequential and parallel versions of the algorithm for each each test (or accumulations of tests). The script would check if both outputs (using debug mode) were the same, and if so, it would return the speedup. We spent a good amount of time using that script for testing - and we managed to encounter some errors during that time which we, obviously, corrected. However, a script like this isn't enough so later we started using some scripts a colleague of ours made and posted on piazza. As we ran out of time we chose to use them (later giving them credit of course) instead of making our own. With these scripts we managed to compare results much faster and generate plots which make analysis easier.
 
-\subsection{Python script}
-We made a script....
-We also used scripts from Piazza...
+\subsection{First time results}
+CORRER UMA VERSAO MAIS ANTIGA DO PROGRAMA, GERAR RESULTADOS E POR AQUI.
 
-\subsection{Changes made}
-What needed to be changed
 
 \subsection{Final solution}
-Final code algorithm
+Our final solution, which we 
 
 \section{Results}
 MAIS, MUITO MAIS GRÁFICOS
