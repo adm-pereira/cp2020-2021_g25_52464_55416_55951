@@ -128,7 +128,8 @@ The speedup is an obvious choice for measuring how faster our parallel version i
 \section{Analysis and approach}
 
 \subsection{Code analysis}
-Fazer secções para cada ponto do projeto? 4.x até 4.y?
+
+The sequential base of this project presented a few situations where concurrency could be used to our advantage. The initialization of the layer and layer\_copy arrays was being made with the usage of 2 identical loops, so we found that merging those "for's" was helpful to later parallelize their computation with the use of OpenMP. Going further, we found at the "4.2" area of the code a similar loop to the one above it, so we decided to create an if statement that would only set values on the layer\_copy array when the final storm had finished updating the energy values of the layer array allowing us to merge another for and later utilize OpenMP. On the "4.3" we found an area of code where a maximum was being maintained over a sequential loop, so we marked it as a possible critical area of our code when attempting to parallelize that same "for". Finally we also found that the layer and layer\_copy were not being freed at the end of the program, so we did that just for consistency sake, even though it is not really the purpose of this class.
 
 \subsection{Approach to OpenMP solution}
 \begin{itemize}
@@ -147,7 +148,9 @@ CORRER UMA VERSAO MAIS ANTIGA DO PROGRAMA, GERAR RESULTADOS E POR AQUI.
 
 
 \subsection{Final solution}
-Our final solution, which we 
+Having in mind the previous analysis, we decided to change some of the code the code in a way we could control the number of threads. By changing that we could see effectively (with help of the scripts) which were the numbers of threads that were most effective for our solution. Of course we kept in mind that that number is result of the machine we're running the code in, so we wanted to test our code in a machine capable of running more threads in the cluster - we couldn't reserve a node with more threads than the machine we were running the code in (12 threads max) so we opted for not testing our code in the cluster as we don't think it'll get us anywhere.
+
+Unfortunately though, we ran out of time before we could try to evaluate and parallelize other sections of the code beyond section 4. This was not our expectations for this project at all, but given the situation we decided to work with this solution until the end.
 
 \section{Results}
 MAIS, MUITO MAIS GRÁFICOS
