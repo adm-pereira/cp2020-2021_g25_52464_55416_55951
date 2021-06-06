@@ -72,7 +72,7 @@ E-mail Diogo Lages: d.lages@campus.fct.unl.pt}\\
 
 \IEEEtitleabstractindextext{%
 \begin{abstract}
-The evolution of computing technology enters an era of advances in processor architectures, such as multi-core, increasing the complexity of parallel computing systems. Thus, multi-core features a variety of parallel programming languages for running parallel programs being OpenMP one of the most successful libraries to apply. It is an application program interface (API) for parallel programming model of shared memory multiprocessors. Due to this progression in architectures and their complexity, the constant analysis and evaluation of the performance of OpenMP builds, kernels and applications on multi-core systems has become very significant, since performance consists of gathering all information about the execution characteristics of a program. There are three interfacing software layers used to classify the performance: the instrumentation layer, which defines the evaluated performance events, the classification or measurement layer, which determines which performance event is, in reality, caught and how the tool will measure it, and the analysis layer, which processes the performance data and compiles it into a structure that can be displayed in performance tools. In this paper, it is given a solution for the Concurrency and Parallelism Project problem and the structure for testing it.
+The evolution of computing technology enters an era of advances in processor architectures, such as multi-core, increasing the complexity of parallel computing systems. Thus, multi-core features a variety of parallel programming languages for running parallel programs being OpenMP one of the most successful libraries to apply. It is an application program interface (API) for parallel programming model of shared memory multiprocessors. Due to this progression in architectures and their complexity, the constant analysis and evaluation of the performance of OpenMP builds, kernels and applications on multi-core systems has become very significant, since performance consists of gathering all information about the execution characteristics of a program. There are three interfacing software layers used to classify the performance: the instrumentation layer, which defines the evaluated performance events, the classification or measurement layer, which determines which performance event is, in reality, caught and how the tool will measure it, and the analysis layer, which processes the performance data and compiles it into a structure that can be displayed in performance tools. In this paper, it is given a solution for the Concurrency and Parallelism Project problem and the structure for testing, analyzing and evaluating it.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
@@ -91,13 +91,22 @@ OpenMP, Parallelism, Analysis
 \IEEEraisesectionheading{\section{Introduction}\label{sec:introduction}}
 
 
-\IEEEPARstart{T}{he} advance of modern computing technology brought to us the necessity to upgrade processor architectures contributing to the enlargement of complexity of parallel systems. Within the multi-core architecture there are varieties of parallel languages that can be utilized to run the parallel programs (paper survey tools).
+\IEEEPARstart{T}{he} advance of modern computing technology brought to us the necessity to upgrade processor architectures contributing to the enlargement of complexity of parallel systems. Within the multi-core architecture there are varieties of parallel languages that can be utilized to run the parallel programs [referencia: paper survey tools]. The OpenMP, in comparison with other parallel languages, shows a lot more efficacy when used with multi-core architectures.\\
+In this last years, with this computing enhancement, the need of learning, and being comfortable with the environment and performance of OpenMP has been increasing. However,this requirement will guide us to the encounter of new problems and challenges, within the "OpenMP parallelization world", which can only be analyzed and evaluated by the platform and the compiler specific mechanism [referencia: paper survey tools] since there is, still, no interface to analyze the performance of OpenMP.\\
+Our goal in this project is to parallelize a sequential program using the OpenMP libraries incorporated with C/C++ and to analyze our solution testing the parallelization with different values, such as the number of threads used in our methods, the input values, etc.\\
+Our approach to the project in general was based on Bloom's Taxonomy Pyramid, which is a set of hierarchical models to classify and specify the knowledge levels. There are six levels in Bloom's Pyramid: remembering, understanding, applying, analyzing, evaluating, and creating, where each one depends on the one below.\\
 
+\begin{center}
+    \begin{figure}[h!]
+        \centering{\includegraphics[width=4cm]{Bloom's Pyramid.png}}
+        \caption{Knowledge Levels of Bloom's Pyramid}
+        \centering{\label{fig}}
+    \end{figure}
+\end{center}
 
-\hfill mds
- 
+We figured that following this steps would be the best way to start our project so the first stage was to remember the theory given in the course classes and we even checked all the course subjects that we considered important to the realization of the project. The next steps were to understand everything that was being given to us (initial code, utterance, tests, report format, etc) and starting to apply what was necessary for the parallelization of the program. The next two phases (analyzing and evaluating) were done simultaneously, as we started taking note of the responses from our parallel program as soon as we started testing our solution. The last stage of the pyramid was implemented after realizing what were the pros and cons of our parallel solution and figuring out if it was necessary to change something in our program in order to get a better solution.
+
 \hfill June 06, 2021
-
 
 \section{Beforehand concepts}
 We're gonna explain some concepts before going further. These are for analysis and evaluation purposes.
