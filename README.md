@@ -20,7 +20,7 @@ After João Lourenço customizations, the project was changed by Pedro Madeira, 
 1. Open the Src directory in a linux terminal
 2. `make all` or `make debug_all` if you want normal run or debug run, respectively
 3. `./energy_storms_seq <array_size> <{name of all test files you want separated by an empty space}>` for sequential version
-4. `./energy_storms_seq <array_size> <{name of all test files you want separated by an empty space}>` for parallel version
+4. `./energy_storms_omp <array_size> <{name of all test files you want separated by an empty space}>` for parallel version
 
 # How to run the program as we ourselves tested
 (You need to have python3 installed as well as numpy, progress and matplotlib libraries)
