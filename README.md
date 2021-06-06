@@ -24,6 +24,7 @@ After João Lourenço customizations, the project was changed by Pedro Madeira, 
 
 # How to run the program as we ourselves tested
 (You need to have python3 installed as well as numpy, progress and matplotlib libraries)
+
 This will run all tests given by the teacher and check if the output is correct as well for tests 01, 02 and 09.
 
 1. 'python3 scripts/run-tests.py test_files/tests.ini experiment_01 -d'. This will create .csv files in Src/logs/experiment_01
