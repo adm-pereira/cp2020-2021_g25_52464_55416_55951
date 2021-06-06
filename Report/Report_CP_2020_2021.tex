@@ -43,10 +43,10 @@
 
 % *** PDF, URL AND HYPERLINK PACKAGES ***
 \usepackage{url}
+% correct bad hyphenation here
 \usepackage{hyperref}
 
 
-% correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
 
@@ -91,8 +91,8 @@ OpenMP, Parallelism, Analysis
 \IEEEraisesectionheading{\section{Introduction}\label{sec:introduction}}
 
 
-\IEEEPARstart{T}{he} advance of modern computing technology brought to us the necessity to upgrade processor architectures contributing to the enlargement of complexity of parallel systems. Within the multi-core architecture there are varieties of parallel languages that can be utilized to run the parallel programs [referencia: paper survey tools]. The OpenMP, in comparison with other parallel languages, shows a lot more efficacy when used with multi-core architectures.\\
-In this last years, with this computing enhancement, the need of learning, and being comfortable with the environment and performance of OpenMP has been increasing. However,this requirement will guide us to the encounter of new problems and challenges, within the "OpenMP parallelization world", which can only be analyzed and evaluated by the platform and the compiler specific mechanism [referencia: paper survey tools] since there is, still, no interface to analyze the performance of OpenMP.\\
+\IEEEPARstart{T}{he} advance of modern computing technology brought to us the necessity to upgrade processor architectures contributing to the enlargement of complexity of parallel systems. Within the multi-core architecture there are varieties of parallel languages that can be utilized to run the parallel programs \cite{surveyTools}. The OpenMP, in comparison with other parallel languages, shows a lot more efficacy when used with multi-core architectures.\\
+In this last years, with this computing enhancement, the need of learning, and being comfortable with the environment and performance of OpenMP has been increasing. However,this requirement will guide us to the encounter of new problems and challenges, within the "OpenMP parallelization world", which can only be analyzed and evaluated by the platform and the compiler specific mechanism \cite{surveyTools} since there is, still, no interface to analyze the performance of OpenMP.\\
 Our goal in this project is to parallelize a sequential program using the OpenMP libraries incorporated with C/C++ and to analyze our solution testing the parallelization with different values, such as the number of threads used in our methods, the input values, etc.\\
 Our approach to the project in general was based on Bloom's Taxonomy Pyramid, which is a set of hierarchical models to classify and specify the knowledge levels. There are six levels in Bloom's Pyramid: remembering, understanding, applying, analyzing, evaluating, and creating, where each one depends on the one below.\\
 
@@ -106,14 +106,14 @@ Our approach to the project in general was based on Bloom's Taxonomy Pyramid, wh
 
 We figured that following this steps would be the best way to start our project so the first stage was to remember the theory given in the course classes and we even checked all the course subjects that we considered important to the realization of the project. The next steps were to understand everything that was being given to us (initial code, utterance, tests, report format, etc) and starting to apply what was necessary for the parallelization of the program. The next two phases (analyzing and evaluating) were done simultaneously, as we started taking note of the responses from our parallel program as soon as we started testing our solution. The last stage of the pyramid was implemented after realizing what were the pros and cons of our parallel solution and figuring out if it was necessary to change something in our program in order to get a better solution.
 
-\hfill June 06, 2021
+%\hfill June 06, 2021
 
 \section{Beforehand concepts}
 We're gonna explain some concepts before going further. These are for analysis and evaluation purposes.
 
 \subsection{Class contents}
 \begin{itemize}
-    \item \textbf{Speedup} is given by the ratio of the time it takes the sequencial version to execute for the time it takes the parallel version to execute.
+    \item \textbf{Speedup} is given by the ratio of the time it takes the sequential version to execute for the time it takes the parallel version to execute.
     \item \textbf{Efficiency} is given by the ratio of the Speedup for the number of threads that ran during the parallel program.
     \item \textbf{Cost} is given by the time of the parallel execution times the number of threads that ran during it's execution.
     \item \textbf{Amdahl's Law} gives us an upper bound for the speedup, assuming that we want to compute the same work as in the sequential version. This assumption is correct because increasing the work won't help us in this project, our goal is to decrease the time it takes to compute the \underline{same amount of work}.
@@ -186,9 +186,8 @@ We would like to thank:
 
 \begin{thebibliography}{1}
 
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+\bibitem{surveyTools}
+Mubrak S. Mohsen, Rosni Abdullah, and Yong M. Teo, \emph{A Survey on Performance Tools for OpenMP}, 2009, p.1
 
 \end{thebibliography}
 
